@@ -1,16 +1,17 @@
 jQuery(document).ready(function ($) {
-    function startScrolling() {
-        let container = $('.nb-notice-container');
-        let items = $('.nb-notice-item');
-        let totalHeight = 0;
+    let container = $('.nb-notice-container');
+    let items = $('.nb-notice-item');
+    let totalHeight = 0;
+    let scrolling = true;
 
-        items.each(function () {
-            totalHeight += $(this).outerHeight(true);
-        });
+    items.each(function () {
+        totalHeight += $(this).outerHeight(true);
+    });
 
-        container.append(items.clone()); // Clone for smooth looping
+    container.append(items.clone()); // Clone for smooth looping
 
-        function scrollNotices() {
+    function scrollNotices() {
+        if (scrolling) {
             container.animate(
                 { scrollTop: totalHeight },
                 3000,
@@ -21,9 +22,20 @@ jQuery(document).ready(function ($) {
                 }
             );
         }
-
-        scrollNotices();
     }
 
-    startScrolling();
+    // Start scrolling
+    scrollNotices();
+
+    // Stop scrolling on hover
+    container.hover(
+        function () {
+            scrolling = false;
+            container.stop();
+        },
+        function () {
+            scrolling = true;
+            scrollNotices();
+        }
+    );
 });
